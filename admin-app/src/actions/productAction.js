@@ -1,4 +1,4 @@
-import { productConstanst } from "./constants";
+// import { productConstanst } from "./constants";
 import axiosInstance from "../helpers/axios";
 
 export const addProduct = (form) => {
