@@ -24,18 +24,29 @@ export const getAllCategory = (user) => {
 
 export const addCategory = (form) => {
   return async (dispatch) => {
-    dispatch({type : categoryConstants.ADD_NEW_CATEGORY_REQUEST})
+    dispatch({ type: categoryConstants.ADD_NEW_CATEGORY_REQUEST });
     const res = await axiosInstance.post(`/category/create`, form);
-    if(res) {
+    if (res) {
       dispatch({
-        type : categoryConstants.ADD_NEW_CATEGORY_SUCCESS,
-        payload : {category : res.data.category }
-      })
-    }else {
+        type: categoryConstants.ADD_NEW_CATEGORY_SUCCESS,
+        payload: { category: res.data.category },
+      });
+    } else {
       dispatch({
-        type : categoryConstants.ADD_NEW_CATEGORY_FAILURE,
-        payload : res.data.eroor
-      })
+        type: categoryConstants.ADD_NEW_CATEGORY_FAILURE,
+        payload: res.data.eroor,
+      });
+    }
+  };
+};
+
+export const updateCategories = (form) => {
+  return async (dispatch) => {
+    const res = await axiosInstance.post(`/category/update`, form);
+    if (res) {
+      console.log("if res", res);
+    } else {
+      console.log("esle res", res);
     }
   };
 };

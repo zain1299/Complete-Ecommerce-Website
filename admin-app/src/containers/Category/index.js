@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import Layout from "../../components/LayOut";
 import { useDispatch, useSelector } from "react-redux";
-import { addCategory } from "../../actions";
+import { addCategory, updateCategories } from "../../actions";
 import Input from "../../components/UI/Input";
 import NewModal from "../../components/UI/Modal";
 import CheckboxTree from "react-checkbox-tree";
@@ -118,51 +118,8 @@ const Category = () => {
     }
   };
 
-  return (
-    <>
-      <Layout sidebar>
-        <Container className="my-2">
-          <Row>
-            <Col md={12}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <h3>Category</h3>
-                <Button variant="primary" onClick={handleShow}>
-                  Add Category
-                </Button>
-              </div>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={12}>
-              {/* <ul>{renderCategories(category.categories)}</ul> */}
-              <CheckboxTree
-                nodes={renderCategories(category.categories)}
-                checked={checked}
-                expanded={expanded}
-                onCheck={(checked) => setChecked(checked)}
-                onExpand={(expanded) => setExpanded(expanded)}
-                icons={{
-                  check: <IoIosCheckbox />,
-                  uncheck: <IoIosCloseCircleOutline />,
-                  halfCheck: <IoIosCheckboxOutline />,
-                  expandClose: <IoIosArrowForward />,
-                  expandOpen: <IoIosArrowDown />,
-                }}
-              />
-            </Col>
-          </Row>
-          <Row className="my-4">
-            <Col>
-              <Button>Delete Category</Button>
-              <Button onClick={updateCategory} className="mx-2">
-                Edit Category
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      </Layout>
-
+  const renderAddCategoryModal = () => {
+    return (
       <NewModal
         show={show}
         handleClose={handleClose}
@@ -195,11 +152,37 @@ const Category = () => {
           onChange={handleCategoryImage}
         />
       </NewModal>
+    );
+  };
 
-      {/* Edit Categories */}
+  const updateCategoriesForm = () => {
+    const form = new FormData();
+
+    expandedArray.map((item, index) => {
+      form.append("_id", item.value);
+      form.append("name", item.name);
+      form.append("parentId", item.parentId ? item.parentId : "");
+      form.append("type", item.type);
+    });
+
+    checkedArray.map((item, index) => {
+      form.append("_id", item.value);
+      form.append("name", item.name);
+      form.append("parentId", item.parentId ? item.parentId : "");
+      form.append("type", item.type);
+    });
+
+    dispatch(updateCategories(form));
+
+    setUpdateCategoryModal(false);
+  };
+
+  const renderUpdatedCategoriesModal = () => {
+    return (
+      // Edit Categories
       <NewModal
         show={updateCategoryModal}
-        handleClose={() => setUpdateCategoryModal(false)}
+        handleClose={updateCategoriesForm}
         title={"Update Category"}
         buttonTitle={"Update Categories"}
         size="lg">
@@ -309,12 +292,63 @@ const Category = () => {
           ))}
 
         {/* <Input
-          className="my-3"
-          type="file"
-          name="CategoryImage"
-          onChange={handleCategoryImage}
-        /> */}
+         className="my-3"
+         type="file"
+         name="CategoryImage"
+         onChange={handleCategoryImage}
+       /> */}
       </NewModal>
+    );
+  };
+
+  return (
+    <>
+      <Layout sidebar>
+        <Container className="my-2">
+          <Row>
+            <Col md={12}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <h3>Category</h3>
+                <Button variant="primary" onClick={handleShow}>
+                  Add Category
+                </Button>
+              </div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col md={12}>
+              {/* <ul>{renderCategories(category.categories)}</ul> */}
+              <CheckboxTree
+                nodes={renderCategories(category.categories)}
+                checked={checked}
+                expanded={expanded}
+                onCheck={(checked) => setChecked(checked)}
+                onExpand={(expanded) => setExpanded(expanded)}
+                icons={{
+                  check: <IoIosCheckbox />,
+                  uncheck: <IoIosCloseCircleOutline />,
+                  halfCheck: <IoIosCheckboxOutline />,
+                  expandClose: <IoIosArrowForward />,
+                  expandOpen: <IoIosArrowDown />,
+                }}
+              />
+            </Col>
+          </Row>
+          <Row className="my-4">
+            <Col>
+              <Button>Delete Category</Button>
+              <Button onClick={updateCategory} className="mx-2">
+                Edit Category
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </Layout>
+
+      {renderAddCategoryModal()}
+
+      {renderUpdatedCategoriesModal()}
     </>
   );
 };
