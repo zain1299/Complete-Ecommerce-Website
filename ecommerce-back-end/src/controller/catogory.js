@@ -63,7 +63,7 @@ exports.updateCategories = async (req, res) => {
         name: name[i],
         type: type[i],
       };
-      if (parentId !== "") {
+      if (parentId[i] !== "") {
         category.parentId = parentId[i];
       }
 
@@ -74,8 +74,9 @@ exports.updateCategories = async (req, res) => {
       );
 
       updatedCategories.push(updatedCategory);
-      return res.status(200).json({ updatedCategories });
     }
+
+    return res.status(200).json({ updatedCategories });
   } else {
     const category = {
       name,
