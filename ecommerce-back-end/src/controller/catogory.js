@@ -68,7 +68,7 @@ exports.updateCategories = async (req, res) => {
       }
 
       const updatedCategory = await Category.findOneAndUpdate(
-        { _id },
+        { _id: _id[i] },
         category,
         { new: true },
       );
@@ -76,7 +76,7 @@ exports.updateCategories = async (req, res) => {
       updatedCategories.push(updatedCategory);
     }
 
-    return res.status(200).json({ updatedCategories });
+    return res.status(200).json({ updatedCategories: updatedCategories });
   } else {
     const category = {
       name,
